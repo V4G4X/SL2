@@ -1,2 +1,2 @@
-# SL2
-Shell Programming Lab
+#SL2
+OS Programming Lab
