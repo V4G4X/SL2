@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Batch: K9 Assignment 1: Shell Programming
 # Expected to perform following operations on the DB: 1)Create,2) View, 3)Insert,4) Delete,5)Modify,6)Exit
 # 17	33117	Stock Records	Item Name, Deadstock No., Purchase Order No.,Type(Consumable/NonConsumable)
@@ -43,9 +43,9 @@ do
         let i=0
         while [ "$i" -lt "$N" ]             #Traverse all the records that exist
         do
-            if [ "${DEL_FLAG[$i]}" -eq "0" ]    #if flag is not raised
+            if [ "${DEL_FLAG[$i]}" -eq "0" ]    #if 'logical delete' flag is not raised
             then                                #then print records
-                echo -e "${NAME[$i]}\t${DEADSTOCK_NO[$i]}\t${ORDER_NO[$i]}\t${TYPE[$i]}"
+                echo -e "${NAME[$i]}\t\t${DEADSTOCK_NO[$i]}\t\t${ORDER_NO[$i]}\t\t${TYPE[$i]}"
             fi                                  #else ignore
             let i++
         done
@@ -72,8 +72,8 @@ do
             if [ "$PURNO" -eq "${ORDER_NO[$i]}" ]   #If Key value matches
             then                                    #then logically delete that record 
                 echo -e "Deleting the following Record" 
-                echo -e "${NAME[$i]}\t${DEADSTOCK_NO[$i]}\t${ORDER_NO[$i]}\t${TYPE[$i]}"
-                let DEL_FLAG[$i]=1                  #by tripping that flag variable
+                echo -e "${NAME[$i]}\t\t${DEADSTOCK_NO[$i]}\t\t${ORDER_NO[$i]}\t\t${TYPE[$i]}"
+                let DEL_FLAG[$i]=1                  #by tripping that 'delete flag' variable
                 break                               #touch only single record at a time hence break
             fi
             let i++
@@ -88,15 +88,28 @@ do
             if [ "$PURNO" -eq "${ORDER_NO[$i]}" ]    #If Key value matches
             then                                     # then modify entire record
                 echo -e "Modifying the following Record"
-                echo -e "${NAME[$i]}\t${DEADSTOCK_NO[$i]}\t${ORDER_NO[$i]}\t${TYPE[$i]}"
-                echo -e -n "Enter the item Name: "
-                read NAME[$i]
-                echo -e -n "Enter the Deadstock No.: "
-                read DEADSTOCK_NO[$i]
-                echo -e -n "Enter the Order No.: "
+                echo -e "${NAME[$i]}\t\t${DEADSTOCK_NO[$i]}\t\t${ORDER_NO[$i]}\t\t${TYPE[$i]}"
+                echo -e "What field to modify?\n1.Name\n2.Deadstock No.\n3.Item Type\nEnter Choice:"
+                read CHOICE2
+                case "$CHOICE2" in
+                    "1")
+                        echo -e -n "Enter the item Name: "
+                        read NAME[$i]
+                    ;;
+                    "2")
+                        echo -e -n "Enter the Deadstock No.: "
+                        read DEADSTOCK_NO[$i]
+                    ;;
+                    "3")
+                        echo -e -n "Enter the item Type(Consumable/NonConsumable)\nEnter 0 for Consumable, 1 for Non-Consumable: "
+                        read TYPE[$i]
+                    ;;
+                    *)
+                        echo "Incorrect Choice Entered\nPlease Try again later"
+                    ;;
+                esac
+                echo -e -n "Enter the Updated Order No.: "
                 read ORDER_NO[$i]
-                echo -e -n "Enter the item Type(Consumable/NonConsumable)\nEnter 0 for Consumable, 1 for Non-Consumable: "
-                read TYPE[$i]
                 let DEL_FLAG[$i]=0
                 break                               #touch only single record at a time hence break
             fi
