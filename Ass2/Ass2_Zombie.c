@@ -65,24 +65,31 @@ int main()
 {
     int n = 0;
     int pid = getpid(), pidC = 0;
+    printf("The currect pid is %d.\n", pid);
     printf("Enter the number of terms in the array:");
     scanf("%d", &n);
     int *arr = (int *)calloc(sizeof(int), n);
     accArr(arr, n);
     printArr(arr, n);
-    printf("pid is %d\n", getpid());
+    printf("\n");
+    bubbleSortDesc(arr, n);
+    printArr(arr, n);
+    printf("\n");
+
     int forkId = fork();
     if (forkId == 0)
     {
-        printf("pid is %d\n", getpid());
-        if (pid == getpid())
+        sleep(1);
+        printf("\nThis is Child Process\n");
+        printf("It's PID is %d\nIts PPID is %d\n", getpid(), getppid());
+        bubbleSortAsc(arr, n);
+        printArr(arr, n);
+    }
+    else
+    {
+        printf("This is Parent Process\nPutting it in infinite loop to make it unresposive\n");
+        while (1)
         {
-            printf("This is the parent process\n");
-            
-        }
-        else if (getppid() == pid)
-        {
-            printf("This is the child process\n");
         }
     }
     return 0;
