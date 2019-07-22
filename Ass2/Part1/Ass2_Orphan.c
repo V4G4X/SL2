@@ -69,28 +69,28 @@ int main()
     printf("Enter the number of terms in the array:");
     scanf("%d", &n);
     int *arr = (int *)calloc(sizeof(int), n);
-    accArr(arr, n);
-    printArr(arr, n);
+    accArr(arr, n);                         //Accept Array
+    printArr(arr, n);                       //Print Unsorted Array
     printf("\n");
     bubbleSortDesc(arr, n);
-    printArr(arr, n);
+    printArr(arr, n);                       //Sort Descending ordered Array
     printf("\n");
 
     int forkId = fork();
     if (forkId == 0)
     {
-        sleep(1);
+        sleep(1);                         //Child will sleep for a second  
         printf("\nThis is Child Process\n");
         printf("It's PID is %d\nIts PPID is %d\n", getpid(), getppid());
-        bubbleSortAsc(arr, n);
+        bubbleSortAsc(arr, n);            //Child sorts ascendingly BubbleSort
         printArr(arr, n);
-        while (1)
+        while (1)                         //Infinite Loop so that can be viewed in Terminal
         {
         }
     }
     else
     {
-        return 0;
+        return 0;                       //Parent will execute itself
     }
     return 0;
 }
