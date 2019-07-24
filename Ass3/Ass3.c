@@ -35,6 +35,7 @@ void *getProdElement(struct prodData *data) // function that calculates value of
   }
   printf("Thread[%d][%d] returning value %d\n\n", i, j, *prod);
   matP[i][j] = *prod;
+  return NULL;
 }
 
 void inputMatrix(int *mat[], int m, int n, char c) {
