@@ -20,11 +20,11 @@ int isEmpty(int array[]) {
 }
 
 void printQueue() {
-  int i = tail;
+  int i = head;
   while (1) {
     printf("%d\t", array[i]);
     i = (i + 1) % MAX;
-    if (i == head)
+    if (i == tail)
       break;
   }
   printf("\n");
@@ -39,8 +39,8 @@ void *produce() {
     printf("---------------Beginning of Critical Section of "
            "Producer---------------\n");
     printf("Producers just produced %d\n", i);
-    array[head] = i;
-    head = (head + 1) % MAX;
+    array[tail] = i;
+    tail = (tail + 1) % MAX;
     printQueue();
     printf("----------------Ending of Critical Section of "
            "Producer---------------\n");
@@ -57,8 +57,8 @@ void *consume() {
     //Beginning of Critical Section of Consumer
     printf("---------------Beginning of Critical Section of "
            "Consumer---------------\n");
-    int i = array[tail];
-    tail = (tail + 1) % MAX;
+    int i = array[head];
+    head = (head + 1) % MAX;
     printf("Consumers just consumed %d\n", i);
     if (!isEmpty(array))
       printQueue();
@@ -105,7 +105,7 @@ int main(int argc, char const *argv[]) {
     for (i = small; i < p; i++)
       pthread_create(&producer[i], NULL, produce, NULL);
   }
-  while (getchar() != 'x') {
+  while (1) {
   }
   for (i = 0; i < p; i++)
     pthread_join(producer[i], NULL);
