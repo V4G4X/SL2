@@ -43,7 +43,7 @@ void *produce() {
     tail = (tail + 1) % MAX;
     printQueue();
     printf("----------------Ending of Critical Section of "
-           "Producer---------------\n");
+           "Producer---------------\n\n");
     sleep((rand() % 2) + 1);
     sem_post(&full);
     pthread_mutex_unlock(&lock);
@@ -65,7 +65,7 @@ void *consume() {
     else
       printf("Queue Empty\n");
     printf("----------------Ending of Critical Section of "
-           "Consumer---------------\n");
+           "Consumer---------------\n\n");
     sleep((rand() % 2) + 1);
     //Ending of Critical Section of Consumer
     sem_post(&empty);
