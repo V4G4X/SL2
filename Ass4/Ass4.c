@@ -12,14 +12,14 @@ int array[MAX];       // Data Buffer
 int head = 0;         // Variable To keep track of head of Queue
 int tail = 0;         // Variable to keep track of tail of Queue
 
-int isEmpty(int array[]) {
-  if (tail == head) {
-    return 1;
+int isEmpty(int array[]) { // Boolean Function, return 1 if queue empty
+  if (tail == head) {      // This can either mean queue is either empty or Full
+    return 1;              // But this function will only be called by consumers
   }
   return 0;
 }
 
-void printQueue() {
+void printQueue() { // Prints the entire Queue fom front to rear
   int i = head;
   while (1) {
     printf("%d\t", array[i]);
@@ -30,7 +30,8 @@ void printQueue() {
   printf("\n");
 }
 
-void *produce() {
+void *produce() { // Infintite Loop that produces random number between 0-9 and
+                  // pushes onto Buffer(Queue)
   while (1) {
     // Generate Value
     int i = rand() % 10;
@@ -50,11 +51,11 @@ void *produce() {
   }
 }
 
-void *consume() {
+void *consume() { // Infintite Loop that consumers from Buffer(Queue)
   while (1) {
     sem_wait(&full);
     pthread_mutex_lock(&lock);
-    //Beginning of Critical Section of Consumer
+    // Beginning of Critical Section of Consumer
     printf("---------------Beginning of Critical Section of "
            "Consumer---------------\n");
     int i = array[head];
@@ -67,7 +68,7 @@ void *consume() {
     printf("----------------Ending of Critical Section of "
            "Consumer---------------\n\n");
     sleep((rand() % 2) + 1);
-    //Ending of Critical Section of Consumer
+    // Ending of Critical Section of Consumer
     sem_post(&empty);
     pthread_mutex_unlock(&lock);
   }
@@ -90,23 +91,23 @@ int main(int argc, char const *argv[]) {
   printf("Enter the number of Consumers you want to create: ");
   scanf("%d", &k);
   consumer = (pthread_t *)calloc(sizeof(pthread_t), k);
-  int small = p < k ? p : k;
+  int small = p < k ? p : k; // Contains the smaller number between no. of
+                             // Producers and no. of Consumers
   printf("Creating the thread Jobs i.e launching them to their respective "
          "runtimes\n");
   printf("Attempt to create Producers and Consumers together\n");
-  for (i = 0; i < small; i++) {
+  for (i = 0; i < small; i++) {       //Create Producers and Consumers together
     pthread_create(&producer[i], NULL, produce, NULL);
     pthread_create(&consumer[i], NULL, consume, NULL);
   }
   if (p < k) {
-    for (i = small; i < k; i++)
+    for (i = small; i < k; i++)       //The remaining producers threads are created
       pthread_create(&consumer[i], NULL, consume, NULL);
   } else if (p > k) {
-    for (i = small; i < p; i++)
+    for (i = small; i < p; i++)       //The remaining consumers threads are created
       pthread_create(&producer[i], NULL, produce, NULL);
   }
-  while (1) {
-  }
+  printf("The Threads are all created now\n");
   for (i = 0; i < p; i++)
     pthread_join(producer[i], NULL);
   for (i = 0; i < k; i++)
