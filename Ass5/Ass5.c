@@ -1,6 +1,6 @@
-#include <stdio.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -12,7 +12,7 @@ pthread_mutex_t
 
 // Buffer Variables
 char buffer[33110];
-int writePos=0;
+int writePos = 0;
 int readerPos[5];
 int readCensus = 3;
 
@@ -23,29 +23,29 @@ void writer() {
 
     // Write into buffer
     int r;
-    for (r = rand() % 20; r > 0; r--) {
-      writePos=(writePos+1)%33110;
-      if (writePos == 33110)
-        printf("The Buffer is Full. The Writer can't write no more\n");
+    for (r = rand() % 19 + 1; r > 0; r--) {
+      writePos = (writePos + 1) % 33110;
+      // if (writePos == 33110)
+      //   printf("The Buffer is Full. The Writer can't write no more\n");
       buffer[writePos] = (rand() % 26) + 65;
     }
     printf("Wrote into File\n");
 
     printf("Writer Critical Section End\n");
     sem_post(&wrt);
-    sleep(rand() % 3);
+    sleep(rand() % 2 + 1);
   }
 }
 
 void reader(void *n) {
   int i = *(int *)n;
-  readerPos[i]=0;
+  readerPos[i] = 0;
   printf("Reader no: %d\n", i);
   while (1) {
     // Establish an increment in Reader Queue
     pthread_mutex_lock(&mutex);
-    printf("Incrementing readcount\n");
     readcount++;
+    printf("Incrementing readcount\n");
     if (readcount == 1) {
       // If first reader, wait the Writer
       sem_wait(&wrt);
@@ -57,16 +57,16 @@ void reader(void *n) {
     printf("Reader[%d] now reading\n", i);
     int r;
     char c;
-    for (r = rand() % 5; r > 0; r--) {
+    for (r = rand() % 4 + 1; r > 0; r--) {
+      c = buffer[readerPos[i]];
+      printf("%c", c);
       readerPos[i]++;
       if (readerPos[i] == writePos) {
         printf("\nReader[%d] reached End of Buffer\n", i);
         break;
       }
-      c = buffer[readerPos[i]];
-      printf("%c", c);
     }
-    printf("\nRead from File\n");
+    printf("\nReader[%d] Read from File\n",i);
 
     // Done Reading
     pthread_mutex_lock(&mutex);
@@ -78,7 +78,7 @@ void reader(void *n) {
       sem_post(&wrt);
     }
     pthread_mutex_unlock(&mutex);
-    sleep(rand() % 5);
+    sleep(rand() % 9 + 1);
   }
 }
 
@@ -92,8 +92,11 @@ int main(int argc, char const *argv[]) {
   int i;
   void *j[5];
   pthread_create(&writers, NULL, (void *)writer, NULL);
+  sleep(5);
   for (i = 0; i < 5; i++) {
-    j[i] = (void *)&i;
+    int *p = (int *)malloc(sizeof(int));
+    *p = i;
+    j[i] = (void *)p;
     pthread_create(&readers[i], NULL, (void *)reader, j[i]);
   }
   while (1) {
