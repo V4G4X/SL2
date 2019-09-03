@@ -70,7 +70,7 @@ void pick_up(int x) {
 }
 
 void *philosophize(void *p) {
-  int *i = (int*)p;
+  int *i = (int *)p;
   while (1) {
     pthread_mutex_lock(&lock);
     printf("\n PHILOSOPHER %d is thinking", *i);
