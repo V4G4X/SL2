@@ -17,16 +17,18 @@ int main(int argc, char const *argv[]) {
     // Child Process
     char address[30];
     read(fldes[0], address, sizeof(address));
-	FILE *fp = fopen(address,"r");
-	char message[1024];
-	fgets(message,sizeof(message),fp);
-	write(fldes2[1],message,sizeof(message));
+    close(fldes[0]);
+    FILE *fp = fopen(address, "r");
+    char message[1024];
+    fgets(message, sizeof(message), fp);
+    write(fldes2[1], message, sizeof(message));
   } else {
     // Parent Process
     write(fldes[1], FILENAME, sizeof(FILENAME));
-	char message[1024];
-	read(fldes2[0],message,sizeof(message));
-	printf("%s\n",message);
+    char message[1024];
+    read(fldes2[0], message, sizeof(message));
+    close(fldes[1]);
+    printf("%s\n", message);
   }
   return 0;
 }

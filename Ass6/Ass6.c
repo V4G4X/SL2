@@ -10,8 +10,8 @@
 
 typedef enum { HUNGRY, THINKING, EATING } e;
 e state[MAX_SIZE];
-int *eat_count;
-int max;
+int *eat_count = NULL;
+int max = 0;
 int n;
 sem_t self[MAX_SIZE];
 pthread_mutex_t lock;
@@ -37,7 +37,7 @@ void test(int x) {
   pthread_mutex_lock(&lock);
   if (state[(x + 1) / n] != EATING && state[(x + (n - 1)) / n] != EATING &&
       state[x] == HUNGRY && test_max(x)) {
-    printf("\n PHILOSOPHER %d is eating\n", x);
+    printf("\n Philosopher %d is eating\n", x);
     state[x] = EATING;
     for (j = 0; j < n; j++) {
       printf(" %d ", eat_count[j]);
@@ -52,7 +52,7 @@ void test(int x) {
 
 void put_down(int x) {
   pthread_mutex_lock(&lock);
-  printf("\n PHILOSOPHER %d is Thinking", x);
+  printf("\n Philosopher %d is Thinking", x);
   state[x] = THINKING;
   pthread_mutex_unlock(&lock);
   test((x + 1) % n);
@@ -61,7 +61,7 @@ void put_down(int x) {
 
 void pick_up(int x) {
   pthread_mutex_lock(&lock);
-  printf("\n PHILOSOPHER %d is hungry", x);
+  printf("\n Philosopher %d is Hungry", x);
   state[x] = HUNGRY;
   pthread_mutex_unlock(&lock);
   test(x);
@@ -73,20 +73,20 @@ void *philosophize(void *p) {
   int *i = (int *)p;
   while (1) {
     pthread_mutex_lock(&lock);
-    printf("\n PHILOSOPHER %d is thinking", *i);
+    printf("\nPhilosopher %d is thinking", *i);
     state[*i] = THINKING;
     pthread_mutex_unlock(&lock);
-    printf("\n PHILOSOPHER %d is going to pick up", *i);
+    printf("\nPhilosopher %d is going to pick up", *i);
     pick_up(*i);
     sleep(rand() % 4);
-    printf("\n PHILOSOPHER %d is going to put down", *i);
+    printf("\nPhilosopher %d is going to put down", *i);
     put_down(*i);
     sleep(rand() % 4);
   }
 }
 
 int main() {
-  printf("\nHOW MANY PHILOSOPHERS CAN YOU FEED?");
+  printf("\nHow many Philosophers are seated on the table?");
   // printf("1");
   scanf("%d", &n);
   eat_count = (int *)malloc(n * sizeof(int));
@@ -94,7 +94,6 @@ int main() {
   pthread_t phil[MAX_SIZE];
   int i = 0;
 
-  printf("2");
   for (i = 0; i < n; i++) {
     sem_init(&self[i], 0, 0);
     // sem_wait(&self[i]);
@@ -102,7 +101,6 @@ int main() {
   for (i = 0; i < n; i++) {
     eat_count[i] = 0;
   }
-  printf("3");
 
   for (i = 0; i < n; i++) {
     int *index = (int *)malloc(sizeof(int));
@@ -110,7 +108,7 @@ int main() {
     if (pthread_create(&phil[i], NULL, philosophize, (void *)index) == 0) {
       continue;
     } else {
-      printf("\nPHILOSOPHER %d is stillborn", i);
+      printf("\nPhilosopher %d couldn't be created.\n", i);
     }
   }
   printf("4");
@@ -118,4 +116,5 @@ int main() {
     pthread_join(phil[i], NULL);
   }
   printf("5");
+  return 0;
 }
