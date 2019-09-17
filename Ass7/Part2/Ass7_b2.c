@@ -51,6 +51,7 @@ typedef struct count
 			write(fd,message,32767);
 	  }
   	  close(fd);
-  	  while(1){}
+  	  fclose(file);
+	  while(1){sleep(1);}
 	  return 0;
 }

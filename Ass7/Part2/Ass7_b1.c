@@ -21,9 +21,9 @@ int main(int argc, char const *argv[]) {
 	read(fd,(char*)chars,32767);
 	read(fd,(char*)words,32767);
 	read(fd,(char*)lines,32767);
-	printf("\nNo. of Characters: %s",chars);
-	printf("No. of Words: %s",words);
-	printf("No. of Lines: %s",lines);
+	printf("\n%s",chars);
+	printf("%s",words);
+	printf("%s",lines);
 	close(fd);
 	while (1) {}
 	return 0;
