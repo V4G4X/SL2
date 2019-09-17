@@ -3,7 +3,8 @@
 #include <unistd.h>
 #define FILENAME "file.txt"
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]) 
+{
   int fldes[2];
   int fldes2[2];
   int stat = pipe(fldes);
@@ -12,6 +13,7 @@ int main(int argc, char const *argv[]) {
     perror("Piping Error\n");
     EXIT_FAILURE;
   }
+
   int forkId = fork();
   if (forkId == 0) {
     // Child Process

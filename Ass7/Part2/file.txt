@@ -1,0 +1,3 @@
+Character Count: 416
+Word Count: 89
+Line Count: 5
